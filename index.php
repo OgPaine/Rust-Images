@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rust images</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
@@ -53,21 +53,6 @@
             display: flex;
             gap: 10px;
         }
-
-        .download-btn {
-            background: #2196F3;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.2em;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
         .copy-all-btn {
             background: #4CAF50;
             color: white;
@@ -81,11 +66,6 @@
             gap: 8px;
             white-space: nowrap;
         }
-
-        .download-btn:hover {
-            background: #1976D2;
-        }
-
         .copy-btn:hover,
         .copy-all-btn:hover {
             background: #337936;
@@ -101,8 +81,6 @@
         td {
             padding: 10px;
             border: 1px solid #444;
-            white-space: nowrap;
-            /* Prevent text wrapping */
         }
 
         th {
@@ -110,25 +88,11 @@
             font-weight: bold;
         }
 
-        td:nth-child(1),
-        /* Name column */
-        td:nth-child(2),
-        /* Image column */
-        td:nth-child(3) {
-            /* Image Link column */
-            width: 200px;
-            /* Set a fixed width for all three columns */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            /* Add ellipsis if content overflows */
-            max-width: 200px;
-        }
-
         td img {
             max-width: 100%;
-            max-height: 100px;
             height: auto;
             border-radius: 4px;
+            max-height: 100px;
         }
 
         .path-input-wrapper {
@@ -207,7 +171,6 @@
         </div>
         <div class="search-wrapper">
             <div class="button-wrapper">
-
                 <button id="copyAllBtn" class="copy-all-btn">
                     <i class="fas fa-copy"></i> Copy All Links
                 </button>
@@ -224,39 +187,38 @@
                 </tr>
             </thead>
             <tbody id="itemTable">
-    <?php
-    $webpDir = 'webp';
-    $imgDir = 'img';
+                <?php
+                $webpDir = 'webp';
+                $imgDir = 'img';
 
-    // Get all images from the webp directory
-    if (is_dir($webpDir)) {
-        $images = glob("$webpDir/*.webp");
+                if (is_dir($webpDir)) {
+                    $images = glob("$webpDir/*.webp");
 
-        foreach ($images as $image) {
-            $imageName = basename($image);
-            $imageNameWithoutExtension = pathinfo($imageName, PATHINFO_FILENAME);
-            $displayName = htmlspecialchars(str_replace('-', ' ', $imageNameWithoutExtension));
-            $imageUrlWebp = "/$webpDir/$imageName";
-            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
-            $domain = $protocol . "://" . $_SERVER['HTTP_HOST']; 
-            $imageUrlImg = "$domain/$imgDir/$imageNameWithoutExtension.png"; 
+                    foreach ($images as $image) {
+                        $imageName = basename($image);
+                        $imageNameWithoutExtension = pathinfo($imageName, PATHINFO_FILENAME);
+                        $displayName = htmlspecialchars(str_replace('-', ' ', $imageNameWithoutExtension));
+                        $imageUrlWebp = "/$webpDir/$imageName";
+                        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+                        $domain = $protocol . "://" . $_SERVER['HTTP_HOST']; 
+                        $imageUrlImg = "$domain/$imgDir/$imageNameWithoutExtension.png"; 
 
-            echo "<tr>";
-            echo "<td><strong>" . $displayName . "</strong></td>";
-            echo "<td><a href='" . $imageUrlImg . "' target='_blank'>";
-            echo "<img src='" . $imageUrlWebp . "' alt='" . $displayName . "' loading='lazy' width='100' height='100'>";
-            echo "</a></td>";
-            echo "<td>";
-            echo "<div class='path-input-wrapper'>";
-            echo "<button class='copy-btn' data-clipboard-text='" . $imageUrlImg . "'><i class='fas fa-copy'></i></button>";
-            echo "<input type='text' class='path-input' value='" . $imageUrlImg . "' readonly>";
-            echo "</div>";
-            echo "</td>";
-            echo "</tr>";
-        }
-    }
-    ?>
-</tbody>
+                        echo "<tr>";
+                        echo "<td><strong>" . $displayName . "</strong></td>";
+                        echo "<td><a href='" . $imageUrlImg . "' target='_blank'> 
+                <img src='" . $imageUrlWebp . "' alt='" . $displayName . "' loading='lazy'>
+              </a></td>";
+                        echo "<td>
+                <div class='path-input-wrapper'>
+                    <button class='copy-btn' data-clipboard-text='" . $imageUrlImg . "'><i class='fas fa-copy'></i></button>
+                    <input type='text' class='path-input' value='" . $imageUrlImg . "' readonly>
+                </div>
+              </td>";
+                        echo "</tr>";
+                    }
+                }
+                ?>
+            </tbody>
         </table>
     </div>
 
@@ -291,7 +253,6 @@
 
         function filterTable() {
             var input = document.getElementById('searchBar');
-            // Sanitize the input value
             input.value = sanitizeInput(input.value);
             var filter = input.value.toLowerCase();
             var table = document.getElementById('itemTable');
